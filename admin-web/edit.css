@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.content {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  margin: auto;
+}
+
+input {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+}
+
+.addBtn {
+  padding: 0.8rem;
+}

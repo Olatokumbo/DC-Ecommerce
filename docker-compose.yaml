@@ -1,0 +1,96 @@
+version: '3.9'
+services:
+  flask-app:
+    build: ./server
+    ports:
+      - "9000:5001"
+    volumes:
+      - ./server:/app:ro
+    environment:
+      - PORT=5001
+    networks:
+      - dockerNet
+  flaskadmin-app:
+    build: ./server-admin
+    ports:
+      - 9081:5000
+    volumes:
+      - ./server-admin:/app:ro
+    environment:
+      - PORT=5000
+    networks:
+      - dockerNet
+  mysql-app:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - data-store:/var/lib/mysql
+    ports:
+      - "4000:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+    networks:
+      - dockerNet
+  client-app:
+    build: ./client-web
+    container_name: web1
+    volumes:
+      - ./client-web:/var/www/html/
+    ports: 
+      - "8081:80"
+    networks:
+      - dockerNet
+  client-app2:
+    build: ./client-web
+    container_name: web2
+    volumes:
+      - ./client-web:/var/www/html/
+    ports: 
+      - "8082:80"
+    networks:
+      - dockerNet
+  client-app3:
+    build: ./client-web
+    container_name: web3
+    volumes:
+      - ./client-web:/var/www/html/
+    ports: 
+      - "8083:80"
+    networks:
+      - dockerNet
+  admin-app:
+    build: ./admin-web
+    container_name: admin
+    volumes:
+      - ./admin-web:/var/www/html/
+    ports: 
+      - "8080:80"
+    networks:
+      - dockerNet
+  loadbalancer:
+    build: ./loadbalancer
+    container_name: haproxy
+    volumes:
+      - ./loadbalancer:/usr/local/etc/haproxy/
+    ports:
+      - "80:80"
+    networks:
+      - dockerNet
+  redis-server:
+    image: redis:4.0
+    container_name: redis-server
+    command: /bin/bash -c 'redis-server --appendonly yes'
+    ports:
+      - "6380:6379"
+    volumes:
+      - data-store:/data
+    mem_limit: 96m
+    networks:
+      - dockerNet
+
+volumes:
+  data-store:
+    external: true
+networks:
+  dockerNet:
+    driver: bridge
