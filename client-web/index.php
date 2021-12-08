@@ -16,7 +16,7 @@
         <div class='content'>
             <h2>All Products</h2>
             <?php
-            $data = file_get_contents("http://distributedcomputing_flask-app_1:5001");
+            $data = file_get_contents("http://flask-app:5001");
             $decoded_json = json_decode($data, true);
             ?>
 

@@ -1,32 +1,40 @@
 version: '3.9'
 services:
   flask-app:
+    container_name: flask-app
     build: ./server
-    ports:
-      - "9000:5001"
+    expose:
+      - 5001
     volumes:
       - ./server:/app:ro
     environment:
       - PORT=5001
     networks:
       - dockerNet
+    depends_on:
+      - mysql-app
   flaskadmin-app:
+    container_name: flaskadmin-app
     build: ./server-admin
-    ports:
-      - 9081:5000
+    expose:
+      - 5000
     volumes:
       - ./server-admin:/app:ro
     environment:
       - PORT=5000
     networks:
       - dockerNet
+    depends_on:
+      - mysql-app
   mysql-app:
+    container_name: mysql-app
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - data-store:/var/lib/mysql
-    ports:
-      - "4000:3306"
+      # - data-store:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d/:ro
+    expose:
+      - 3306
     environment:
       - MYSQL_ROOT_PASSWORD=admin123
     networks:
@@ -36,10 +44,12 @@ services:
     container_name: web1
     volumes:
       - ./client-web:/var/www/html/
-    ports: 
-      - "8081:80"
+    expose:
+      - 80
     networks:
       - dockerNet
+    depends_on:
+      - flask-app
   client-app2:
     build: ./client-web
     container_name: web2
@@ -49,6 +59,8 @@ services:
       - "8082:80"
     networks:
       - dockerNet
+    depends_on:
+      - flask-app
   client-app3:
     build: ./client-web
     container_name: web3
@@ -58,6 +70,8 @@ services:
       - "8083:80"
     networks:
       - dockerNet
+    depends_on:
+      - flask-app
   admin-app:
     build: ./admin-web
     container_name: admin
@@ -67,6 +81,8 @@ services:
       - "8080:80"
     networks:
       - dockerNet
+    depends_on:
+      - flaskadmin-app
   loadbalancer:
     build: ./loadbalancer
     container_name: haproxy
@@ -82,8 +98,8 @@ services:
     command: /bin/bash -c 'redis-server --appendonly yes'
     ports:
       - "6380:6379"
-    volumes:
-      - data-store:/data
+    # volumes:
+    #   # - data-store:/data
     mem_limit: 96m
     networks:
       - dockerNet
