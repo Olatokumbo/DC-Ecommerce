@@ -1,19 +1,16 @@
 from flask import Flask, Response, json, request
 from flask_mysqldb import MySQL
-from flask_cors import CORS, cross_origin
 import json
-import decimal
 
 app = Flask("__name__")
 
+# MySQL Configuration
 app.config["MYSQL_HOST"] = "mysql-app"
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = "admin123"
 app.config["MYSQL_DB"] = "sys"
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
 mysql = MySQL(app)
 
 
@@ -25,21 +22,17 @@ def default_json(t):
 def welcome():
     return "pong"
 
-# Get all Products
 
-
+# Get All Products
 @app.route("/", methods=["GET"])
 def main():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM products")
     data = cur.fetchall()
-    print(data)
-    # return "Hello World"
     return Response(json.dumps(data, default=default_json),  mimetype='application/json')
 
-# Add Product
+# Add New Product
 @app.route("/add", methods=['GET', 'POST'])
-@cross_origin()
 def main1():
     name = request.args.get("name")
     price = request.args.get("price")

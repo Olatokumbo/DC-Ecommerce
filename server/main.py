@@ -1,27 +1,27 @@
-from flask import Flask, Response, config, json
+from flask import Flask, Response, json
 from flask_mysqldb import MySQL
 from flask_caching import Cache
 import json
 
 
 app = Flask("__name__")
+
+# Initialize Flask caching 
 cache = Cache(
-    config={"CACHE_TYPE": "RedisCache",
-            "CACHE_REDIS_HOST": "redis-server",
-            "CACHE_REDIS_PORT": 6379,
-            "CACHE_DEFAULT_TIMEOUT": 30}
+    config={
+        "CACHE_TYPE": "RedisCache",
+        "CACHE_REDIS_HOST": "redis-server",
+        "CACHE_REDIS_PORT": 6379,
+        "CACHE_DEFAULT_TIMEOUT": 30  # Cache duration
+    }
 )
 
+# MySQL Configuration
 app.config["MYSQL_HOST"] = "mysql-app"
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = "admin123"
 app.config["MYSQL_DB"] = "sys"
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-# Redis setup
-# app.config['CACHE_TYPE'] = "RedisCache"
-# app.config['CACHE_REDIS_HOST'] = "redis-server"
-# app.config['CACHE_REDIS_PORT'] =  6379
-# app.config['CACHE_DEFAULT_TIMEOUT'] = 300
 
 cache.init_app(app)
 mysql = MySQL(app)
@@ -36,6 +36,7 @@ def welcome():
     return "pong"
 
 
+# Get All Products
 @app.route("/", methods=["GET"])
 def main():
     cachedData = cache.get("data")

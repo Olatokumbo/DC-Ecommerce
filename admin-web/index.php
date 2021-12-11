@@ -18,7 +18,13 @@
             $decoded_json = json_decode($data, true);
             ?>
             <div class="display">
-                <a href="/admin/add.php"><button class="addBtn">Add Product</button></a>
+                <?php
+                if ($_SERVER['SERVER_PORT'] == 80) {
+                    echo "<a href='/admin/add.php'><button class='addBtn'>Add Product</button></a>";
+                } else {
+                    echo "<a href='/add.php'><button class='addBtn'>Add Product</button></a>";
+                }
+                ?>
                 <table border='1'>
                     <tr>
                         <th>Id</th>
