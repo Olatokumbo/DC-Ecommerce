@@ -49,7 +49,7 @@ def main1():
     if request.method == "POST":
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO products(name, price, quantity) VALUE(%s, %s, %s)",
-                    (name, price, quantity))
+                    ([name], price, quantity))
         mysql.connection.commit()
         cur.close()
         return "Done"
@@ -63,10 +63,11 @@ def edit(productId):
     name = request.args.get("name")
     price = request.args.get("price")
     quantity = request.args.get("quantity")
+    print(name);
     if request.method == "POST":
         cur = mysql.connection.cursor()
         cur.execute("UPDATE products SET name=%s, price=%s, quantity=%s WHERE id=%s",
-                    (name, price, quantity, [productId]))
+                    ([name], price, quantity, [productId]))
         mysql.connection.commit()
         cur.close()
     if request.method == "GET":

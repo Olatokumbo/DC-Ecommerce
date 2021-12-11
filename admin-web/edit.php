@@ -5,9 +5,12 @@
         <?php include './edit.css'; ?>
     </style>
     <main>
-        <div class='header'>
-            <h1>Edit Product</h1>
-            <h3 class='ip'>IP: <?php echo $_SERVER["SERVER_ADDR"] ?></h3>
+    <div class='header'>
+            <h2>Edit Product</h2>
+            <div>
+                <h3 class='header_right'>Hostname: <span class="header_identity"><?php echo gethostname() ?></span></h3>
+                <h3 class='header_right'>IP: <span class="header_identity"><?php echo $_SERVER["SERVER_ADDR"] ?></span></h3>
+            </div>
         </div>
         <?php
         $id = strval(htmlspecialchars($_GET["id"]));
@@ -29,12 +32,13 @@
             $fprice = $_POST["price"];
             $fquantity = $_POST["quantity"];
 
-            $eurl = "http://flaskadmin-app:5000/product/" . $fid . "/edit" . "?name=" . $fname . "&price=" . $fprice . "&quantity=" . $fquantity;
-            curl_setopt($ch, CURLOPT_URL, $eurl);
+            $url = "http://flaskadmin-app:5000/product/" . $fid . "/edit" . "?name=" . $fname . "&price=" . $fprice . "&quantity=" . $fquantity;
+            $url = str_replace(' ', '%20', $url);
+            curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, 1);
             $response = curl_exec($ch);
             print "curl response is:" . $response;
-            echo $eurl;
+            echo $url;
 
             // close the connection, release resources used
             curl_close($ch);

@@ -6,8 +6,11 @@
     </style>
     <main>
         <div class='header'>
-            <h1>Add Product</h1>
-            <h3 class='ip'>IP: <?php echo $_SERVER["SERVER_ADDR"] ?></h3>
+            <h2>Add Product</h2>
+            <div>
+                <h3 class='header_right'>Hostname: <span class="header_identity"><?php echo gethostname() ?></span></h3>
+                <h3 class='header_right'>IP: <span class="header_identity"><?php echo $_SERVER["SERVER_ADDR"] ?></span></h3>
+            </div>
         </div>
         <?php if (isset($_POST["name"], $_POST["price"], $_POST["quantity"])) {
             $ch = curl_init();
@@ -17,6 +20,7 @@
             $quantity = $_POST["quantity"];
 
             $url = "http://flaskadmin-app:5000/add?name=" . $name . "&price=" . $price . "&quantity=" . $quantity;
+            $url = str_replace(' ', '%20', $url);
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, 1);
             $response = curl_exec($ch);

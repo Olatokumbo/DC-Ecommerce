@@ -6,8 +6,11 @@
     </style>
     <main>
         <div class='header'>
-            <h1>Delete Product</h1>
-            <h3 class='ip'>IP: <?php echo $_SERVER["SERVER_ADDR"] ?></h3>
+            <h2>Delete Product</h2>
+            <div>
+                <h3 class='header_right'>Hostname: <span class="header_identity"><?php echo gethostname() ?></span></h3>
+                <h3 class='header_right'>IP: <span class="header_identity"><?php echo $_SERVER["SERVER_ADDR"] ?></span></h3>
+            </div>
         </div>
         <?php
         $id = strval(htmlspecialchars($_GET["id"]));

@@ -5,7 +5,12 @@ import json
 
 
 app = Flask("__name__")
-cache = Cache(config={"CACHE_TYPE": "RedisCache", "CACHE_REDIS_HOST": "redis-server", "CACHE_REDIS_PORT":6379, "CACHE_DEFAULT_TIMEOUT": 10})
+cache = Cache(
+    config={"CACHE_TYPE": "RedisCache",
+            "CACHE_REDIS_HOST": "redis-server",
+            "CACHE_REDIS_PORT": 6379,
+            "CACHE_DEFAULT_TIMEOUT": 30}
+)
 
 app.config["MYSQL_HOST"] = "mysql-app"
 app.config["MYSQL_USER"] = "root"
@@ -21,8 +26,10 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 cache.init_app(app)
 mysql = MySQL(app)
 
+
 def default_json(t):
     return f'{t}'
+
 
 @app.route("/ping", methods=["GET"])
 def welcome():
@@ -37,7 +44,7 @@ def main():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM products")
     data = cur.fetchall()
-    print (data)
+    print(data)
     cache.set("data", data)
     return Response(json.dumps(data, default=default_json),  mimetype='application/json')
 

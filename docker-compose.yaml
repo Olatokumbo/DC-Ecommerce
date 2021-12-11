@@ -44,8 +44,8 @@ services:
     container_name: web1
     volumes:
       - ./client-web:/var/www/html/
-    expose:
-      - 80
+    ports: 
+      - "8081:80"
     networks:
       - dockerNet
     depends_on:
@@ -92,6 +92,11 @@ services:
       - "80:80"
     networks:
       - dockerNet
+    depends_on:
+      - admin-app
+      - client-app
+      - client-app2
+      - client-app3
   redis-server:
     image: redis:4.0
     container_name: redis-server

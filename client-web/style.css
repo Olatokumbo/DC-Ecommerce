@@ -9,11 +9,13 @@
 }
 
 body {
-  background-color: white;
+  background-color: #e5e5e5;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  margin: 0;
+  font-family: "Courier New", Courier, monospace;
 }
 
 main {
@@ -28,6 +30,18 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: #04aa6d;
+  padding: 0.5rem;
+}
+
+.header_right {
+  margin: 0.5rem 0;
+}
+
+.header_identity{
+  background-color: white;
+  padding: 0 0.5rem;
+  border-radius: 15px;
 }
 
 .content {
@@ -37,7 +51,6 @@ main {
   align-items: center;
   justify-content: center;
 }
-
 
 table {
   border-collapse: collapse;
