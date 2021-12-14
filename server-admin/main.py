@@ -32,6 +32,8 @@ def main():
     return Response(json.dumps(data, default=default_json),  mimetype='application/json')
 
 # Add New Product
+
+
 @app.route("/add", methods=['GET', 'POST'])
 def main1():
     name = request.args.get("name")
@@ -41,6 +43,17 @@ def main1():
         return Response(json.dumps({"message": "done"}, default=default_json),  mimetype='application/json')
     if request.method == "POST":
         cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM products WHERE name=%s", ([name]))
+        data = cur.fetchall()
+        if data:
+            fId = data[0]["id"]
+            fName = data[0]["name"]
+            fQuantity = data[0]["quantity"]+int(quantity)
+            cur.execute("UPDATE products SET name=%s, quantity=%s WHERE id=%s",
+                        ([fName], fQuantity, [fId]))
+            mysql.connection.commit()
+            cur.close()
+            return "Done"
         cur.execute("INSERT INTO products(name, price, quantity) VALUE(%s, %s, %s)",
                     ([name], price, quantity))
         mysql.connection.commit()
@@ -56,7 +69,7 @@ def edit(productId):
     name = request.args.get("name")
     price = request.args.get("price")
     quantity = request.args.get("quantity")
-    print(name);
+    print(name)
     if request.method == "POST":
         cur = mysql.connection.cursor()
         cur.execute("UPDATE products SET name=%s, price=%s, quantity=%s WHERE id=%s",
@@ -68,7 +81,7 @@ def edit(productId):
         cur.execute("SELECT * FROM products WHERE id=%s", ([productId]))
         data = cur.fetchall()
         return Response(json.dumps(data, default=default_json),  mimetype='application/json')
-    
+
     return "Done"
 
 
