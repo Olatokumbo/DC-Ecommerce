@@ -51,12 +51,18 @@ main {
   align-items: center;
   justify-content: center;
 }
-
-input,
-.searchBtn {
-  padding: 0.5rem;
+.result{
+  margin: 0.5rem;
 }
 
+.backBtn {
+  margin: 2rem 0;
+  padding: 0.5rem 1.5rem;
+  color: white;
+  background-color: #04aa6d;
+  border-radius: 5rem;
+  outline: none;
+}
 table {
   border-collapse: collapse;
   width: 70%;

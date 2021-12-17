@@ -2,12 +2,8 @@
 
 <body>
     <style>
-        <?php include './style.css'; ?>
+        <?php include './search.css'; ?>
     </style>
-
-    <!-- <h1>My first PHP page</h1> -->
-    <!-- $_SERVER["SERVER_ADDR"] -->
-    <!-- gethostname() -->
     <main>
         <div class='header'>
             <h2>Client</h2>
@@ -17,16 +13,15 @@
             </div>
         </div>
         <div class='content'>
-            <form method="POST" action="search.php">
-                <input placeholder="Search Product" name="name" />
-                <button class="searchBtn" type="submit">Search</button>
-            </form>
-            <h2>All Products</h2>
             <?php
-            $data = file_get_contents("http://flask-app:5001");
+            $url = "http://flask-app:5001/search?name=" . $_POST["name"];
+            $url = str_replace(' ', '%20', $url);
+            $data = file_get_contents($url);
             $decoded_json = json_decode($data, true);
             ?>
-
+            <?php echo "<h2 class='result'>" . "Searched for: " . $_POST["name"] . "</h2>"; ?>
+            <?php echo "<h2 class='result'>" . count($decoded_json) . " Results Found" . "</h2>"; ?>
+            <a href='/index.php'><button class='backBtn'>Go Back</button></a>
             <table border='1'>
                 <tr>
                     <th>Id</th>

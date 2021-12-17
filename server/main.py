@@ -1,4 +1,4 @@
-from flask import Flask, Response, json
+from flask import Flask, Response, json, request
 from flask_mysqldb import MySQL
 from flask_caching import Cache
 import json
@@ -6,7 +6,7 @@ import json
 
 app = Flask("__name__")
 
-# Initialize Flask caching 
+# Initialize Flask caching
 cache = Cache(
     config={
         "CACHE_TYPE": "RedisCache",
@@ -47,6 +47,22 @@ def main():
     data = cur.fetchall()
     print(data)
     cache.set("data", data)
+    return Response(json.dumps(data, default=default_json),  mimetype='application/json')
+
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    name = request.args.get("name")
+    cachedData = cache.get(name)
+    if cachedData:
+        return Response(json.dumps(cachedData, default=default_json),  mimetype='application/json')
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM products WHERE LOWER(name) LIKE LOWER(%s)",
+                (["%" + name+"%"]))
+    data = cur.fetchall()
+    if data:
+        cache.set(name, data)
     return Response(json.dumps(data, default=default_json),  mimetype='application/json')
 
 
