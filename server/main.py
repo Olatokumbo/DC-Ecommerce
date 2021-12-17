@@ -1,11 +1,12 @@
 from flask import Flask, Response, json, request
 from flask_mysqldb import MySQL
 from flask_caching import Cache
+import os
 import json
 
 
 app = Flask("__name__")
-
+PORT = os.environ['PORT']
 # Initialize Flask caching
 cache = Cache(
     config={
@@ -45,11 +46,10 @@ def main():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM products")
     data = cur.fetchall()
-    print(data)
     cache.set("data", data)
     return Response(json.dumps(data, default=default_json),  mimetype='application/json')
 
-
+# Search Product
 @app.route("/search", methods=["GET", "POST"])
 def search():
     name = request.args.get("name")
@@ -65,5 +65,5 @@ def search():
         cache.set(name, data)
     return Response(json.dumps(data, default=default_json),  mimetype='application/json')
 
-
-app.run(host="0.0.0.0", port="5001", debug=True)
+# Running at PORT 5001
+app.run(host="0.0.0.0", port=PORT, debug=True)

@@ -5,6 +5,5 @@ FROM python:3.9-bullseye
     RUN pip install flask_mysqldb
     RUN pip install Flask-Caching
     RUN pip install redis
-    ENV PORT=3000
-    EXPOSE 3000
+    ENV PORT=5001
     CMD ["python", "main.py"]

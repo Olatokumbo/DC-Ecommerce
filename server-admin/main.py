@@ -1,9 +1,10 @@
 from flask import Flask, Response, json, request
 from flask_mysqldb import MySQL
 import json
+import os
 
 app = Flask("__name__")
-
+PORT = os.environ['PORT']
 # MySQL Configuration
 app.config["MYSQL_HOST"] = "mysql-app"
 app.config["MYSQL_USER"] = "root"
@@ -95,5 +96,5 @@ def delete(productId):
         cur.close()
     return "Done"
 
-
-app.run(host="0.0.0.0", port="5000", debug=True)
+# Running at PORT 5000
+app.run(host="0.0.0.0", port=PORT, debug=True)

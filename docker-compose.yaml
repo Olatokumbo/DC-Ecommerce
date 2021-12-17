@@ -31,7 +31,6 @@ services:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      # - data-store:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d/:ro
     expose:
       - 3306
@@ -103,15 +102,10 @@ services:
     command: /bin/bash -c 'redis-server --appendonly yes'
     ports:
       - "6380:6379"
-    # volumes:
-    #   # - data-store:/data
     mem_limit: 96m
     networks:
       - dockerNet
 
-volumes:
-  data-store:
-    external: true
 networks:
   dockerNet:
     driver: bridge
